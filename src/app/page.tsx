@@ -1,9 +1,14 @@
-// src/app/page.tsx
+import { supabase } from "../lib/supabaseClient";
+
 export default async function Home() {
-  // Fetch Van Gogh “Wheat Field with Cypresses” from The Met’s public API
+  // Quick “ping” – proves Supabase keys work
+  const { data: serverTime } = await supabase.rpc("now");
+  console.log("Supabase time:", serverTime);
+
+  // Sample museum call (Met API)
   const res = await fetch(
     "https://collectionapi.metmuseum.org/public/collection/v1/objects/436121",
-    { next: { revalidate: 86400 } }   // cache for 24 h on Vercel
+    { next: { revalidate: 60 * 60 * 24 } } // cache 24 h
   );
   const art = await res.json();
 
